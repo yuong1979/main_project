@@ -1,0 +1,45 @@
+# personal
+venv/
+.env
+private.txt
+*.mp3
+transcription_process.py
+
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+.env/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*~
+
+# Test coverage
+htmlcov/
+.coverage
+.coverage.*
+.cache/
+
+# Miscellaneous
+*.pyc
+.DS_Store
+Thumbs.db
+
+
+

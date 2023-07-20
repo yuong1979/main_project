@@ -1,0 +1,68 @@
+{% extends 'main.html' %}
+{% load static %}
+
+<!-- templates/index.html -->
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+</head>
+<body>
+<div class="container">
+
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div>
+            <label for="id_profile_name">title:</label>
+            {{ form.title }}
+        </div>
+
+        <div>
+          <label for="id_description">description:</label>
+          {{ form.description }}
+        </div>
+
+        <div>
+            <label for="id_podcast">podcast:</label>
+            {{ form.podcast }}
+        </div>
+        
+
+        <div>
+            <label for="id_tags">tags:</label>
+            {{ form.tags }}
+          </div>
+
+
+        <div>
+            <label for="id_media_file">media_file:</label>
+            {{ form.media_file }}
+        </div>
+
+        <div>
+            <label for="id_is_active">is_active:</label>
+            {{ form.is_active }}
+        </div>
+
+        <div>
+            <label for="id_timestamp">timestamp:</label>
+            {{ form.timestamp }}
+        </div>
+
+
+        <button type="submit">Update</button>
+      </form>
+
+</div>
+</body>
+
+
+</html>
+
+{% endblock %}

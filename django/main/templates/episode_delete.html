@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="container">
+        <h2>Delete Episode</h2>
+        <p>Are you sure you want to delete the following episode?</p>
+        <p><strong>Title:</strong> {{ title }}</p>
+        <p><strong>Description:</strong> {{ description }}</p>
+        <p><strong>Podcast:</strong> {{ podcast }}</p>
+        <p><strong>Tags:</strong></p>
+        <ul>
+            {% for tag in tags %}
+                <li>{{ tag }}</li>
+            {% endfor %}
+        </ul>
+        <p><strong>Media File:</strong> {{ media_file }}</p>
+        <p><strong>Timestamp:</strong> {{ timestamp }}</p>
+        <p><strong>Is Active:</strong> {{ is_active }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="submit" value="Delete">
+        </form>
+
+        <a href="{{ request.META.HTTP_REFERER }}">Back</a>
+    </div>
+{% endblock %}

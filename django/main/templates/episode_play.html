@@ -1,0 +1,305 @@
+{% extends 'main.html' %}
+{% load static %}
+
+<!-- templates/index.html -->
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Audio Player</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+
+    <style>
+    /* Hide the default play button */
+    audio::-webkit-media-controls-start-playback-button {
+        display: none;
+        -webkit-appearance: none;
+    }
+
+    audio::-webkit-media-controls-play-button {
+        display: none !important;
+        -webkit-appearance: none;
+    }
+
+    /* audio::-webkit-media-controls-panel {
+        display: none !important;
+        -webkit-appearance: none;
+    } */
+
+    /* Make the playhead visible */
+    audio::-webkit-media-controls-time-remaining-display,
+    audio::-webkit-media-controls-timeline,
+    audio::-webkit-media-controls-current-time-display,
+    audio::-webkit-media-controls-seek-back-button,
+    audio::-webkit-media-controls-seek-forward-button {
+        opacity: 1;
+    }
+
+    #current-time {
+    font-size: 2em;
+    font-family: 'Courier New', Courier, monospace;
+    color: #333;
+    }
+
+    </style>
+</head>
+<body>
+<div class="container">
+
+
+
+
+
+
+    <br><br>
+
+
+
+
+    <!-- player controls -->
+      <div class="card mb-3">
+        <!-- <h3 class="card-header">Card header</h3>
+        <div class="card-body">
+          <h5 class="card-title">Special title treatment</h5>
+          <h6 class="card-subtitle text-muted">Support card subtitle</h6>
+        </div> -->
+
+
+        <svg xmlns="http://www.w3.org/2000/svg" class="d-block user-select-none" width="100%" height="200" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle">
+          <rect width="100%" height="100%" fill="#868e96"></rect>
+          <text x="50%" y="50%" fill="#dee2e6" dy=".3em" id="combined-time"><text></text>
+
+        </svg>
+
+        <ul class="list-group list-group-flush">
+
+            <li class="list-group-item">
+
+                <audio id="audio" controls style="width: 100%;">
+                    <source src="{% url 'serve_audio' filename=audio_file %}" type="audio/mpeg">
+                </audio>
+
+            </li>
+
+
+
+
+            <li class="list-group-item">
+
+            <div class="container my-5">
+                <div class="row">
+            
+                    <!-- Backwards -->
+                    <div class="col text-center" style="margin: 20px;">
+                        <button id="btn-backward" class="btn" onclick="audio.currentTime -= 10;">
+                            <i class="fas fa-backward fa-2x"></i>
+                        </button>
+                    </div>
+                    <!-- Play audio -->
+                    <div class="col text-center" style="margin: 20px;">
+                        <button id="btn-play" class="btn" onclick="togglePlayPause()">
+                            <i class="fas fa-play fa-3x" id="playButton"></i>
+                        </button>
+                    </div>
+                    <!-- Forwards -->
+                    <div class="col text-center" style="margin: 20px;">
+                        <button id="btn-forward" class="btn" onclick="audio.currentTime += 10;">
+                            <i class="fas fa-forward fa-2x"></i>
+                        </button>
+                    </div>
+            
+                </div>
+
+          </li>
+          <li class="list-group-item">
+
+            <div class="row">
+                <!-- Lock screen -->
+                <div class="col text-center" style="margin: 20px;">
+                    <button id="toggleLock" class="btn">
+                        <i class="fas fa-lock-open fa-3x"></i>
+                    </button>
+                </div>
+                <!-- settings -->
+                <div class="col text-center" style="margin: 20px;">
+                    <button id="btn-settings" class="btn">
+                        <a class="btn" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <i class="fas fa-tachometer-alt fa-3x"></i>
+                        </a>
+                    </button>
+                </div>
+            </div>
+
+          </li>
+        </ul>
+
+
+      </div>
+
+
+
+      <!-- <i class="fas fa-cog fa-3x"></i> -->
+
+
+
+    <!-- displaying speed of audio -->
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+                <fieldset class="form-group">
+                    <h5><b><label for="customRange1" class="form-label">Audio speed</label> : <span id="rangeValue">1.0</span></b></h5>
+                    <input type="range" class="form-range" id="customRange1" min="0.5" max="3" step="0.1" value="1" onchange="updatePlaybackSpeed(this.value)">
+                </fieldset>
+        </div>
+    </div>
+
+
+    <br>
+    
+    <!-- displaying time stamps -->
+    <h5><b><label for="" class="form-label" style="margin-left: 20px;">Time stamps</label></b></h5>
+    <ul class="list-group">
+        {% for button in buttons %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+        <!-- Time Skip Button -->
+        <button class="btn btn-link" onclick="audio.currentTime = Number('{{ button.time }}'); return false;">{{ button.label }}</button>
+        <!-- Share Button -->
+        <button class="btn btn-secondary" onclick="copyToClipboard('{{ request.build_absolute_uri }}?time={{ button.time }}')"><i class="fas fa-copy"></i></button>
+        </li>
+        {% endfor %}
+    </ul>
+
+
+    
+
+
+
+    <!-- displaying popup alert -->
+    <div id="copy-alert" class="alert alert-success alert-dismissible fade" role="alert" style="display: none; position: fixed; bottom: 10px; right: 10px; z-index: 999;">
+        Timestamped Link Copied!
+    </div>
+
+
+
+        
+
+
+</div>
+
+
+<script>
+
+
+
+    // for loading audio
+    window.onload = function() {
+        var audio = document.getElementById('audio');
+        audio.currentTime = Number('{{ timestamp }}');
+        audio.addEventListener('play', function() {
+            document.getElementById('playButton').className = 'fas fa-pause fa-3x';
+        });
+        audio.addEventListener('pause', function() {
+            document.getElementById('playButton').className = 'fas fa-play fa-3x';
+        });
+        console.log('test hello')
+        audio.play();
+
+
+        // for displaying the progress timer and the end time
+        audio.addEventListener('loadedmetadata', function() {
+            document.getElementById('total-duration').textContent = " " + formatTime(audio.duration);
+        });
+
+        audio.addEventListener('timeupdate', function() {
+            var currentTime = audio.currentTime;
+            var totalDuration = audio.duration;
+            var combinedTime = formatTime(currentTime) + " / " + formatTime(totalDuration);
+            document.getElementById('combined-time').textContent = " " + combinedTime;
+        });
+
+        function formatTime(time) {
+            // Format time as mm:ss
+            var minutes = Math.floor(time / 60);
+            var seconds = Math.floor(time % 60);
+            return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+        }
+    };
+
+
+    // Toggle play/pause
+    function togglePlayPause() {
+        var audio = document.getElementById('audio');
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    }
+
+
+    // for adjusting the speed of the audio player
+    function updatePlaybackSpeed(speed) {
+    var audio = document.getElementById('audio');
+    audio.playbackRate = speed;
+    document.getElementById('rangeValue').textContent = speed;
+    }
+
+    // for copying timestamp and displaying popup alert
+    function copyToClipboard(text) {
+        var tempInput = document.createElement("input");
+        tempInput.style = "position: absolute; left: -1000px; top: -1000px";
+        tempInput.value = text;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+
+        // Show Bootstrap alert
+        $('#copy-alert').show().addClass('show');
+        setTimeout(function() {
+            $('#copy-alert').fadeOut(2000, function() {
+                $(this).removeClass('show');
+            });
+        }, 1000);
+    }
+
+
+    // for toggling the lock screen to disable all buttons on the screen
+    var clickableElements = Array.from(document.querySelectorAll('button, a, input[type="range"]'));
+    clickableElements = clickableElements.filter(el => el.id !== 'toggleLock');
+
+    var lockButton = document.getElementById('toggleLock');
+    var lockIcon = lockButton.querySelector('i');
+
+    lockButton.addEventListener('click', function() {
+        clickableElements.forEach(el => {
+            el.disabled = !el.disabled;
+        });
+
+        if (lockIcon.classList.contains('fa-lock-open')) {
+            lockIcon.classList.remove('fa-lock-open');
+            lockIcon.classList.add('fa-lock');
+        } else {
+            lockIcon.classList.remove('fa-lock');
+            lockIcon.classList.add('fa-lock-open');
+        }
+    });
+
+    function formatTime(seconds) {
+        var minutes = Math.floor(seconds / 60);
+        seconds = Math.floor(seconds % 60);
+        return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+    }
+
+</script>
+
+</body>
+
+
+</html>
+
+{% endblock %}
+

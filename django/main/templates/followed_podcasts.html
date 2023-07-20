@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+{% load static %}
+
+<!-- templates/index.html -->
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+</head>
+<body>
+<div class="container">
+
+<!-- templates/z_followed_podcasts.html -->
+
+    <div class="container">
+        <h2>Followed Podcasts</h2>
+        <ul>
+            {% for podcast in podcasts %}
+                <li>{{ podcast.title }}</li>
+                <!-- Additional podcast details here -->
+            {% endfor %}
+        </ul>
+    </div>
+
+
+
+</div>
+</body>
+
+
+</html>
+
+{% endblock %}
+

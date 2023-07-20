@@ -1,0 +1,42 @@
+{% extends 'main.html' %}
+{% load static %}
+
+<!-- templates/index.html -->
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+</head>
+<body>
+<div class="container">
+
+    <h1>Episode List</h1>
+
+    <form action="" method="get">
+        <input type="text" name="q" placeholder="Search...">
+        <input type="submit" value="Search">
+    </form>
+
+    <ul>
+        {% for episode in episodes %}
+            <li>
+                <h2>{{ episode.title }}</h2>
+                <p>{{ episode.description }}</p>
+                <!-- Add more episode details here if needed -->
+            </li>
+        {% empty %}
+            <li>No episodes found.</li>
+        {% endfor %}
+    </ul>
+
+</div>
+</body>
+
+
+</html>
+
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'main.html' %}
+{% load static %}
+
+<!-- templates/index.html -->
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+</head>
+<body>
+<div class="container">
+
+    <h2>Search</h2>
+    <form action="{% url 'search' %}" method="GET">
+        <input type="text" name="query" placeholder="Search...">
+        <input type="radio" name="search_type" value="podcasts" {% if search_type != 'episodes' %}checked{% endif %}> Podcasts
+        <input type="radio" name="search_type" value="episodes" {% if search_type == 'episodes' %}checked{% endif %}> Episodes
+        <button type="submit">Search</button>
+    </form>
+
+    <h3>Results:</h3>
+    {% if results %}
+        {% if query %}
+            {% for result in results %}
+                {% if search_type == 'podcasts' %}
+                    <div>
+                        <h4>{{ result.title }}</h4>
+                        <a href="{% url 'podcast_profile' result.pk %}">View Podcast</a>
+                    </div>
+                {% elif search_type == 'episodes' %}
+                    <div>
+                        <h4>{{ result.title }}</h4>
+                        <p>{{ result.podcast.title }}</p>
+                        <a href="{% url 'episode_profile' result.pk %}">View Episode</a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% if search_type == 'podcasts' %}
+                <p>Displaying All Podcasts</p>
+            {% elif search_type == 'episodes' %}
+                <p>Displaying All Episodes</p>
+            {% endif %}
+            {% for result in results %}
+                {% if search_type == 'podcasts' %}
+                    <div>
+                        <h4>{{ result.title }}</h4>
+                        <a href="{% url 'podcast_profile' result.pk %}">View Podcast</a>
+                    </div>
+                {% elif search_type == 'episodes' %}
+                    <div>
+                        <h4>{{ result.title }}</h4>
+                        <p>{{ result.podcast.title }}</p>
+                        <a href="{% url 'episode_profile' result.pk %}">View Episode</a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+
+</div>
+</body>
+
+
+</html>
+
+{% endblock %}
+
+
+
+

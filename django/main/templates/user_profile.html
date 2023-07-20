@@ -1,0 +1,71 @@
+{% extends 'main.html' %}
+{% load static %}
+
+<!-- templates/index.html -->
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+</head>
+<body>
+<div class="container">
+
+        name: {{ name }}
+        <br>
+
+        Bio: {{ bio }}
+        <br>
+        audio_skip_time: {{ audio_skip_time }}
+        <br>
+        audio_speed: {{ audio_speed }}
+        <br>
+        notification activated: {{ notification }}
+        <br>
+        token: {{ token }}
+        <br>
+
+        {% if request.user.is_authenticated %}
+        
+            {% if request.user.id == user.id %}
+                <a href="{% url 'user_profile_update' pk=user.id %}">Update User Profile</a>
+            {% endif %}
+            <br>
+            <!-- create new episodes -->
+            <a href="{% url 'podcast_profile_create'%}">Create New Podcast</a>
+
+        {% endif %}
+
+
+        <br>
+
+        {% if podcast_count > 0 %}
+
+        <h2>Podcasts list</h2>
+            <ul>
+                {% for podcast in podcast %}
+                    <li>
+                        <h3>{{ podcast.title }}</h3>
+                        <p>{{ podcast.description }}</p>
+                        <!-- Add more podcast details here if needed -->
+                        <a href="{% url 'podcast_profile' pk=podcast.pk %}">View Podcast Profile</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No podcasts found.</p>
+        {% endif %}
+
+
+
+</div>
+</body>
+
+
+</html>
+
+{% endblock %}
+

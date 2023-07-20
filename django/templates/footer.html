@@ -1,0 +1,52 @@
+{% load static %}
+<!-- CSS -->
+<style>
+    /* Set the footer styles */
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #f5f5f5;
+        text-align: center;
+        padding: 10px;
+    }
+
+    /* Adjust the content margin to prevent overlapping with the footer */
+    .content {
+        margin-bottom: 60px; /* Adjust this value to match the height of your footer */
+    }
+
+    /* Icon styles */
+    .footer a {
+        margin: 0 10px;
+        color: #333;
+        text-decoration: none;
+    }
+</style>
+
+<!-- HTML -->
+<footer class="footer">
+    <div class="container">
+
+        {% if request.user.is_authenticated %}
+        <p>
+            <a href="{% url 'followed_podcasts' %}">
+                <i class="fa fa-podcast"></i> Followed Podcasts
+            </a> |
+            <a href="{% url 'favorite_episodes' %}">
+                <i class="fa fa-star"></i> Favorite Episodes
+            </a> |
+            <a href="{% url 'user_profile' request.user.pk %}">
+                <i class="fa fa-user"></i> User Profile
+            </a>
+        </p>
+        {% else %}
+        <p>
+            &copy; Copyright 2023 |
+        </p>
+        {% endif %}
+
+
+    </div>
+</footer>

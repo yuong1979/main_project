@@ -1,0 +1,87 @@
+{% extends 'main.html' %}
+{% load static %}
+
+<!-- templates/index.html -->
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+</head>
+<body>
+<div class="container">
+
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+
+
+        <div>
+          <label for="id_audio_speed">Username:</label>
+          {{ form.username }}
+        </div>
+
+
+        
+        <div>
+          <label for="id_bio">Bio:</label>
+          <textarea name="bio" id="id_bio" rows="4">{{ form.bio.value }}</textarea>
+        </div>
+        
+        <div>
+          <label for="id_avatar">Avatar:</label>
+          {{ form.avatar }}
+        </div>
+        
+        <!-- <div>
+          <label for="id_audio_skip_time">Audio Skip Time:</label>
+          {{ form.audio_skip_time }}
+        </div> -->
+
+        <div>
+            <label for="id_audio_skip_time">Audio Skip Time:</label>
+            <select name="audio_skip_time" id="id_audio_skip_time">
+                {% for option in audio_skip_time_options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="id_audio_speed">Audio speed:</label>
+            <select name="audio_speed" id="id_audio_speed">
+                {% for option in audio_speed_options %}
+                    <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+
+        <div>
+          <label for="id_audio_speed">Audio Speed:</label>
+          {{ form.audio_speed }}
+        </div>
+
+        <div>
+          <label for="id_audio_speed">Notification:</label>
+          {{ form.notification }}
+        </div>
+
+
+
+
+        <button type="submit">Update</button>
+      </form>
+
+</div>
+</body>
+
+
+</html>
+
+{% endblock %}
+

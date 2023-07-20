@@ -1,0 +1,90 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <h1>{{ title }}</h1>
+    <p>Owner: {{ podcast_owner }}</p>
+    <p>Operator: {{ operator }}</p>
+    <p>Topic: {{ topic }}</p>
+    <img src="{{ podcast_image }}" alt="Podcast Image">
+    <p>Is Active: {{ is_active }}</p>
+    <p>Description: {{ description }}</p>
+
+    {% if owner %}
+        <a href="{% url 'podcast_profile_update' pk=pk %}">Update Podcast Profile</a>
+        <a href="{% url 'episode_profile_create' pk=pk %}">Create New Episode</a>
+    {% endif %}
+
+
+    <h2>Episodes</h2>
+    {% if episode_count > 0 %}
+        <ul>
+            {% for episode in episode %}
+                <li>
+                    <h3>{{ episode.title }}</h3>
+                    <p>{{ episode.description }}</p>
+                    <a href="{% url 'episode_profile' pk=episode.pk %}">View Episode</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No episodes found.</p>
+    {% endif %}
+
+
+    {% if request.user.is_authenticated %}
+        {% if is_followed %}
+            <button id="followButton">Unfollow</button>
+        {% else %}
+            <button id="followButton">Follow</button>
+        {% endif %}
+    {% endif %}
+
+
+</div>
+
+
+<script>
+
+    const followButton = document.getElementById("followButton");
+    const podcastId = "{{ pk }}";
+
+    function updateFollowButton(isFollow) {
+        if (isFollow) {
+            followButton.textContent = "Unfollow";
+            // followButton.classList.add("unfollowButtonStyle");
+        } else {
+            followButton.textContent = "Follow";
+            // followButton.classList.remove("unfollowButtonStyle");
+        }
+    }
+
+    function toggleFollow() {
+    // Get the CSRF token from the cookie
+    const csrftoken = document.cookie.match(/csrftoken=([^;]+)/)[1];
+
+    // Set the CSRF token in the Axios request headers
+    axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
+
+    // Make the API call to toggle the followed status
+    axios.post("{% url 'toggle_follow' pk=pk %}")
+    .then(response => {
+        const isFollow = response.data.is_followed;
+        updateFollowButton(isFollow);
+        console.log("Podcast followed/unfollowed successfully!");
+        })
+        .catch(error => {
+            console.error("Error followed/unfollowed the podcast:", error);
+        });
+    }
+
+    followButton.addEventListener("click", toggleFollow);
+
+</script>
+
+
+{% endblock %}
+
+

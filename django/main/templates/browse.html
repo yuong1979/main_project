@@ -1,0 +1,58 @@
+{% extends 'main.html' %}
+{% load static %}
+<!-- This is to load the get_count:topic - this is using custom filters -->
+{% load custom_filters %}
+
+<!-- templates/index.html -->
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+</head>
+<body>
+<div class="container">
+
+    <h2>Browse</h2>
+
+    <h3>Topics</h3>
+    <ul>
+        {% for topic in topics %}
+
+        <!-- <li>{{ topic.name }} [{{ topic_counts|get_count:topic }}]</li> -->
+
+        <li><a href="{% url 'search' %}?query={{ topic.name }}&search_type=podcasts">{{ topic.name }} [{{ topic_counts|get_count:topic }}]</a></li>
+
+        {% endfor %}
+    </ul>
+
+    <h3>Tags</h3>
+    <ul>
+        {% for tag in tags %}
+
+        <!-- <li>{{ tag.name }} [{{ tag_counts|get_count:tag }}]</li> -->
+
+        <li><a href="{% url 'search' %}?query={{ tag.name }}&search_type=episodes">{{ tag.name }} [{{ tag_counts|get_count:tag }}]</a></li>
+
+        {% endfor %}
+    </ul>
+
+
+
+</div>
+</body>
+
+
+</html>
+
+{% endblock %}
+
+
+
+
+
+
+

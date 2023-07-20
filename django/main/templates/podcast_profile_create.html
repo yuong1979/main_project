@@ -1,0 +1,60 @@
+{% extends 'main.html' %}
+{% load static %}
+
+<!-- templates/index.html -->
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+</head>
+<body>
+<div class="container">
+
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+  
+        <div>
+          <label for="id_title">Title:</label>
+          {{ form.title }}
+        </div>
+  
+        <div>
+          <label for="id_description">Description:</label>
+          {{ form.description }}
+        </div>
+  
+        <div>
+          <label for="id_operator">Operator:</label>
+          {{ form.operator }}
+        </div>
+  
+        <div>
+          <label for="id_podcast_image">Podcast Image:</label>
+          {{ form.podcast_image }}
+        </div>
+  
+        <div>
+          <label for="id_topic">Topic:</label>
+          {{ form.topic }}
+        </div>
+  
+        <div>
+          <label for="id_is_active">Is Active:</label>
+          {{ form.is_active }}
+        </div>
+  
+        <button type="submit">Create Podcast</button>
+      </form>
+
+</div>
+</body>
+
+
+</html>
+
+{% endblock %}

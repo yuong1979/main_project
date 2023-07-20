@@ -1,0 +1,119 @@
+{% extends 'main.html' %}
+{% load static %}
+
+<!-- templates/index.html -->
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+</head>
+<body>
+<div class="container">
+
+        title: {{ title }}
+        <br>
+
+        description: {{ description }}
+        <br>
+        podcast: {{ podcast }}
+        <br>
+        <p><strong>Tags:</strong></p>
+        <ul>
+            {% for tag in tags %}
+                <li>{{ tag }}</li>
+            {% endfor %}
+        </ul>
+        <br>
+        media_file: {{ media_file }}
+        <br>
+        timestamp: {{ timestamp }}
+        <br>
+        is_active: {{ is_active }}
+        <br>
+
+        {% if owner %}
+            <a href="{% url 'episode_profile_update' pk=pk %}">Update Episode Profile</a>
+            <a href="{% url 'episode_delete' pk=pk %}">Delete Episode</a>
+        {% endif %}
+
+
+        <a href="{{ request.META.HTTP_REFERER }}">Back</a>
+
+        {% if request.user.is_authenticated %}
+            {% if is_favorited %}
+            <button id="favoriteButton">UnFavorite</button>
+            {% else %}
+            <button id="favoriteButton">Favorite</button>
+            {% endif %}
+        {% endif %}
+
+
+        <a href="{% url 'episode_play' pk=pk %}">Play Audio</a>
+
+</div>
+
+
+
+
+<script>
+
+    const favoriteButton = document.getElementById("favoriteButton");
+    const episodeId = "{{ pk }}";
+
+    console.log(episodeId)
+
+    function updateFavoriteButton(isFavorite) {
+        if (isFavorite) {
+            favoriteButton.textContent = "UnFavorite";
+            // favoriteButton.classList.add("unfavoriteButtonStyle");
+        } else {
+            favoriteButton.textContent = "Favorite";
+            // favoriteButton.classList.remove("unfavoriteButtonStyle");
+        }
+    }
+
+
+    function toggleFavorite() {
+    // Get the CSRF token from the cookie
+    const csrftoken = document.cookie.match(/csrftoken=([^;]+)/)[1];
+
+    // Set the CSRF token in the Axios request headers
+    axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
+
+    // Make the API call to toggle the favorite status
+    axios.post("{% url 'toggle_favorite' pk=pk %}")
+
+        .then(response => {
+            const isFavorite = response.data.is_favorite;
+            updateFavoriteButton(isFavorite);
+            console.log("Episode favorited/unfavorited successfully!");
+        })
+        .catch(error => {
+            console.error("Error favoriting/unfavoriting the episode:", error);
+        });
+}
+
+
+    favoriteButton.addEventListener("click", toggleFavorite);
+
+
+
+</script>
+
+</body>
+
+
+</html>
+
+{% endblock %}
+
+
+
+
+
+
+

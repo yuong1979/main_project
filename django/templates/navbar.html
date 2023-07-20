@@ -1,0 +1,81 @@
+
+{% load static %}
+<header class="">
+
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Copyright</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav me-auto">
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'browse'%}">Discover</a>
+              </li>   
+
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'search'%}">Search</a>
+              </li>   
+
+
+
+              
+
+            </ul>
+
+            <nav class="">
+              {% if request.user.is_authenticated %}
+              <!-- Logged In -->
+              <div class="d-flex align-items-center">
+
+                  <div class="mr-4">
+                      <a href="" class="text-decoration-none d-flex align-items-center">
+                          <div class="avatar avatar--medium active">
+                              <img src="{{ request.user.avatar.url }}" />
+                          </div>
+                          <p class="mx-4 my-0">{{ request.user.username }} <span>@{{ request.user.username }}</span></p>
+                      </a>
+                  </div>
+                  <button class="dropdown-button">
+                      <i class="fas fa-chevron-down"></i>
+                  </button>
+
+              </div>
+              {% else %}
+              <!-- Not Logged In -->
+              <a href="{% url 'login' %}" class="d-flex align-items-center">
+
+                  <!-- <img src="{% static 'images/avatar.svg' %}" style="width: 30px; height: 30px;" class="mr-2" /> -->
+                  <p class="mx-4 my-0">Login</p>
+              </a>
+              {% endif %}
+            
+
+              <div class="dropdown-menu">
+
+
+              <!-- <div class="dropdown-divider"></div> -->
+
+                <a class="dropdown-item" href="{% url 'logout' %}">
+                  <i class="fas fa-2x fa-sign-out-alt"></i>Log out
+                </a>
+              </div>
+
+            </nav>
+
+
+          </div>
+        </div>
+      </nav>
+
+
+    
+</header>
+
+
+<!-- <i class="fas fa-2x fa-wrench"></i> -->
+
+
+
