@@ -83,29 +83,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-if not DEBUG:
-    # Production Database configuration
-    # print ("Production Database configuration")
-    DATABASES = {
-        'default': {'ENGINE': 'django.db.backends.postgresql', 'NAME': os.environ.get('PRODUCTION_POSTGRES_NAME'),
-                    'USER': os.environ.get('PRODUCTION_POSTGRES_USER'),
-                    'PASSWORD': os.environ.get('PRODUCTION_POSTGRES_PASSWORD'),
-                    # Use "postgres" when you are using docker or "qwer1234" when local
-                    'HOST': os.environ.get('PRODUCTION_POSTGRES_HOST'),
-                    # Use "pgdb" when you are using docker or "localhost" when local
-                    'PORT': '5432',  # Or your database server port
-                    }}
-
-else:
-    # Local Database configuration
-    # print ("Local Database configuration")
-    DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql', 'NAME': os.environ.get('LOCAL_POSTGRES_NAME'),
-                             'USER': os.environ.get('LOCAL_POSTGRES_USER'),
-                             'PASSWORD': os.environ.get('LOCAL_POSTGRES_PASSWORD'),
-                             # Use "postgres" when you are using docker or "qwer1234" when local
-                             'HOST': 'localhost',  # Use "pgdb" when you are using docker or "localhost" when local
-                             'PORT': '5432',  # Or your database server port
-                             }}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        # Get port from environment or default to 5432.
+        'PORT': os.environ.get('DB_PORT', 5432),
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
