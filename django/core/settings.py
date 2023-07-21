@@ -20,7 +20,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -28,16 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
+DEBUG = os.environ.get('DEBUG', False)
 
 if not DEBUG:
-    #converting string to list    
+    # converting string to list
     ALLOWED_HOSTS = ast.literal_eval(os.environ.get('ALLOWED_HOSTS'))
 else:
     ALLOWED_HOSTS = ['*']
-
-
 
 # Application definition
 
@@ -51,9 +47,7 @@ INSTALLED_APPS = [
     'task1',
     'task2',
     'task3',
-
     'main',
-
     # 'django_celery_beat',
 ]
 
@@ -89,54 +83,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
-
 if not DEBUG:
     # Production Database configuration
     # print ("Production Database configuration")
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('PRODUCTION_POSTGRES_NAME'),
-            'USER': os.environ.get('PRODUCTION_POSTGRES_USER'),
-            'PASSWORD': os.environ.get('PRODUCTION_POSTGRES_PASSWORD'), # Use "postgres" when you are using docker or "qwer1234" when local
-            'HOST': os.environ.get('PRODUCTION_POSTGRES_HOST'),  # Use "pgdb" when you are using docker or "localhost" when local
-            'PORT': '5432',  # Or your database server port
-        }
-    }
+        'default': {'ENGINE': 'django.db.backends.postgresql', 'NAME': os.environ.get('PRODUCTION_POSTGRES_NAME'),
+                    'USER': os.environ.get('PRODUCTION_POSTGRES_USER'),
+                    'PASSWORD': os.environ.get('PRODUCTION_POSTGRES_PASSWORD'),
+                    # Use "postgres" when you are using docker or "qwer1234" when local
+                    'HOST': os.environ.get('PRODUCTION_POSTGRES_HOST'),
+                    # Use "pgdb" when you are using docker or "localhost" when local
+                    'PORT': '5432',  # Or your database server port
+                    }}
 
 else:
     # Local Database configuration
     # print ("Local Database configuration")
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('LOCAL_POSTGRES_NAME'),
-            'USER': os.environ.get('LOCAL_POSTGRES_USER'),
-            'PASSWORD': os.environ.get('LOCAL_POSTGRES_PASSWORD'), # Use "postgres" when you are using docker or "qwer1234" when local
-            'HOST': 'localhost',  # Use "pgdb" when you are using docker or "localhost" when local
-            'PORT': '5432',  # Or your database server port
-        }
-    }
-
-
-
-
-
-
-
-
+    DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql', 'NAME': os.environ.get('LOCAL_POSTGRES_NAME'),
+                             'USER': os.environ.get('LOCAL_POSTGRES_USER'),
+                             'PASSWORD': os.environ.get('LOCAL_POSTGRES_PASSWORD'),
+                             # Use "postgres" when you are using docker or "qwer1234" when local
+                             'HOST': 'localhost',  # Use "pgdb" when you are using docker or "localhost" when local
+                             'PORT': '5432',  # Or your database server port
+                             }}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -156,7 +125,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -170,20 +138,18 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-# This setting defines the base URL to serve static files from. 
-# In this case, it specifies that static files will be served from the "/static/" URL. For example, if you have a CSS file named "styles.css" in your static files directory, it will be accessible at "/static/styles.css".
-STATIC_URL = '/static/'
+# This setting defines the base URL to serve static files from. In this case, it specifies that static files will be
+# served from the "/static/" URL. For example, if you have a CSS file named "styles.css" in your static files
+# directory, it will be accessible at "/static/styles.css".
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = 'static/'
 
-
-
-# This setting specifies additional directories where Django will look for static files. 
-# In the provided code, it indicates that the "static" directory within the project's base directory (BASE_DIR) should be considered for static files. 
-# You can add more directories to this list if you have multiple locations for static files.
+# This setting specifies additional directories where Django will look for static files. In the provided code,
+# it indicates that the "static" directory within the project's base directory (BASE_DIR) should be considered for
+# static files. You can add more directories to this list if you have multiple locations for static files.
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
@@ -197,27 +163,15 @@ MEDIA_URL = '/'
 # In the provided code, it points to the "images" directory within the "static" directory.
 MEDIA_ROOT = BASE_DIR / 'static'
 
-
-
-
-
-
-
-
-
-## docker runs redis while local runs rabbit mq (redis is not working) ###
+# docker runs redis while local runs rabbit mq (redis is not working)
 if not DEBUG:
-    print ('running redis')
+    print('running redis')
     CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
     CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
 else:
-    ## local runs on rabbitmq and does not need config
-    print ('running rabbitmq')
+    # local runs on rabbitmq and does not need config
+    print('running rabbitmq')
     pass
-
-
-
-
 
 # gmail_send/settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -239,10 +193,6 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": 5.0,
     },
 }
-
-# CELERY_BROKER_URL = "redis://redis:6379"
-# CELERY_RESULT_BACKEND = "redis://redis:6379"
-
 
 
 """ crontab() Execute every minute.
