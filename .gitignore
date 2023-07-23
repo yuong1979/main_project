@@ -42,6 +42,4 @@ htmlcov/
 Thumbs.db
 
 */.venv
-
-
-
+.env.gcloud

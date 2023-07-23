@@ -9,13 +9,26 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+import io
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-import ast
+from google.cloud import secretmanager
 
-load_dotenv()
+if os.environ.get("GOOGLE_CLOUD_PROJECT", None):
+    print("Loading secrets from Secret Manager")
+    # Pull secrets from Secret Manager
+    project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
+
+    client = secretmanager.SecretManagerServiceClient()
+    settings_name = os.environ.get("SETTINGS_NAME", "django_settings")
+    name = f"projects/{project_id}/secrets/{settings_name}/versions/latest"
+    payload = client.access_secret_version(name=name).payload.data.decode("UTF-8")
+
+    load_dotenv(stream=io.StringIO(payload))
+
+else:
+    load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,11 +42,14 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
 
-if not DEBUG:
-    # converting string to list
-    ALLOWED_HOSTS = ast.literal_eval(os.environ.get('ALLOWED_HOSTS'))
-else:
-    ALLOWED_HOSTS = ['*']
+# if not DEBUG:
+#     # converting string to list
+#     ALLOWED_HOSTS = ast.literal_eval(os.environ.get('ALLOWED_HOSTS'))
+# else:
+#     ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['https://main-project-393402.uc.r.appspot.com']
 
 # Application definition
 
@@ -89,9 +105,8 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        # Get port from environment or default to 5432.
-        'PORT': os.environ.get('DB_PORT', 5432),
+        'HOST': os.environ.get('DB_HOST', ''),
+        'PORT': os.environ.get('DB_PORT', ''),
     }
 }
 
