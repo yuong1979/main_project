@@ -148,7 +148,10 @@ USE_TZ = True
 # served from the "/static/" URL. For example, if you have a CSS file named "styles.css" in your static files
 # directory, it will be accessible at "/static/styles.css".
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_URL = 'static/'
+if os.environ.get("GOOGLE_CLOUD_PROJECT", None):
+    STATIC_URL = 'https://storage.googleapis.com/dj-static-19234/static/'
+else:
+    STATIC_URL = 'static/'
 
 # This setting specifies additional directories where Django will look for static files. In the provided code,
 # it indicates that the "static" directory within the project's base directory (BASE_DIR) should be considered for
@@ -167,7 +170,7 @@ MEDIA_URL = '/'
 MEDIA_ROOT = BASE_DIR / 'static'
 
 # docker runs redis while local runs rabbit mq (redis is not working)
-if not DEBUG:
+if os.environ.get("CELERY_BROKER"):
     print('running redis')
     CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
     CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")

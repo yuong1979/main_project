@@ -1,4 +1,11 @@
 venv/
 Dockerfile
 .git
+.venv
+app.yaml
+.env
+.env.gcloud
+datadump.json
+db.sqlite3
+static/
 
