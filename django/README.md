@@ -1,6 +1,6 @@
-# Django
+## Django
 
-## Deployment
+### Deployment
 
 Push to Google Cloud Storage
 
@@ -12,4 +12,22 @@ Deploy
 
 ```bash
 gcloud app deploy
+```
+
+## Celery
+
+### Deployment
+
+Deploy
+
+```bash
+gcloud beta app deploy celery_app.yaml
+```
+
+## Secrets
+
+Update secrets
+
+```bash
+gcloud secrets versions add django_settings --data-file=.env.gcloud
 ```
