@@ -1,8 +1,0 @@
-env: flex
-service: celery-flask
-
-manual_scaling:
-  instances: 1
-
-network:
- instance_ip_mode: internal

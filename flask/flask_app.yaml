@@ -1,5 +1,0 @@
-env: flex
-service: flask
-
-env_variables:
-  FLASK: "true"
