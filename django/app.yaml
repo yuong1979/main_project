@@ -2,3 +2,4 @@ env: flex
 
 env_variables:
   DJANGO: "true"
+  APP_ENGINE_URL: "https://main-project-393402.uc.r.appspot.com"

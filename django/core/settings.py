@@ -14,6 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 from google.cloud import secretmanager
+import ast
 
 if os.environ.get("GOOGLE_CLOUD_PROJECT", None):
     print("Loading secrets from Secret Manager")
@@ -42,14 +43,22 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
 
-# if not DEBUG:
-#     # converting string to list
-#     ALLOWED_HOSTS = ast.literal_eval(os.environ.get('ALLOWED_HOSTS'))
-# else:
-#     ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['*']
+if not DEBUG:
+    HOSTS = os.environ.get('ALLOWED_HOSTS')
+    if HOSTS:
+        # converting string to list
+        ALLOWED_HOSTS = ast.literal_eval(HOSTS)
+    else:
+        ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+else:
+    ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['https://main-project-393402.uc.r.appspot.com']
+CSRF_TRUSTED_ORIGINS = []
+
+APP_ENGINE_URL = os.environ.get("APP_ENGINE_URL")
+if APP_ENGINE_URL:
+    CSRF_TRUSTED_ORIGINS.append(APP_ENGINE_URL)
+    ALLOWED_HOSTS.append(APP_ENGINE_URL.lstrip("https://").rstrip("/"))
 
 # Application definition
 
