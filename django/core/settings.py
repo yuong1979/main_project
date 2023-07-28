@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import io
 from pathlib import Path
-from dotenv import load_dotenv
+from dotenv import load_dotenv 
 import os
 from google.cloud import secretmanager
 import ast
+
+
 
 if os.environ.get("GOOGLE_CLOUD_PROJECT", None):
     print("Loading secrets from Secret Manager")
@@ -119,6 +121,8 @@ DATABASES = {
     }
 }
 
+
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -158,7 +162,7 @@ USE_TZ = True
 # directory, it will be accessible at "/static/styles.css".
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 if os.environ.get("GOOGLE_CLOUD_PROJECT", None):
-    STATIC_URL = 'https://storage.googleapis.com/dj-static-19234/static/'
+    STATIC_URL = 'https://storage.googleapis.com/dj-static-19235/static/'
 else:
     STATIC_URL = 'static/'
 
@@ -179,7 +183,7 @@ MEDIA_URL = '/'
 MEDIA_ROOT = BASE_DIR / 'static'
 
 # docker runs redis while local runs rabbit mq (redis is not working)
-if os.environ.get("CELERY_BROKER"):
+if os.environ.get("GOOGLE_CLOUD_PROJECT", None):
     print('running redis')
     CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
     CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://redis:6379/0")
@@ -198,11 +202,18 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 CELERY_BEAT_SCHEDULE = {
+
+    # "scheduled_task": {
+    #     "task": "task1.tasks.send_test_email",
+    #     "schedule": 5.0,
+    # },
+
     "scheduled_task": {
         "task": "task1.tasks.add",
         "schedule": 5.0,
         "args": (50, 180),
     },
+
     "database": {
         "task": "task3.tasks.bkup",
         "schedule": 5.0,

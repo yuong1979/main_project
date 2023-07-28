@@ -51,3 +51,9 @@ Update secrets
 ```bash
 gcloud secrets versions add django_settings --data-file=.env.gcloud
 ```
+
+
+### deploy app and celery both together
+```bash
+gcloud app deploy app.yaml celery_app.yaml
+```
