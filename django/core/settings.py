@@ -162,7 +162,7 @@ USE_TZ = True
 # directory, it will be accessible at "/static/styles.css".
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 if os.environ.get("GOOGLE_CLOUD_PROJECT", None):
-    STATIC_URL = 'https://storage.googleapis.com/dj-static-19235/static/'
+    STATIC_URL = 'https://storage.googleapis.com/dj-static-19236/static/'
 else:
     STATIC_URL = 'static/'
 

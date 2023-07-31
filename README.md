@@ -1,5 +1,5 @@
 ###########################################
-######### Running the project #############
+######### Running django ##################
 ###########################################
 
 ###### Running local ###### 
@@ -10,10 +10,10 @@ On terminal 1 cmd:
 3. `source venv/bin/activate`
 4. `pip install -r requirements.txt`
 5. Change debug to TRUE in settings.py in Django
-6. `python manage.py makemigrations`
-7. `python manage.py migrate`
-8. `python manage.py createsuperuser`
-9. `python manage.py runserver`
+6. `python3 manage.py makemigrations`
+7. `python3 manage.py migrate`
+8. `python3 manage.py createsuperuser`
+9. `python3 manage.py runserver`
 
 On terminal 2 cmd:
 1. `sudo systemctl enable rabbitmq-server`
@@ -64,18 +64,32 @@ Cloud sql
 6. Make changes to the .env to update the SQL connections, PORT - 5432
 
 
-## Push to Google Cloud Storage  - if no storage set up yet https://cloud.google.com/appengine/docs/flexible/serving-static-files?tab=custom#serving_files_from
+
+
+## Create and set up Google Cloud Storage  -  https://cloud.google.com/appengine/docs/flexible/serving-static-files?tab=custom#serving_files_from
+
+## avoid setting up the new bucket on the GUI, just do it via command line(Below), I tried GUI and it doesnt work
+create a new bucket
+```bash
+gsutil mb gs://dj-static-19236
+or 
+gsutil mb gs://<NAME>
+```
 
 grant access to items in bucket
 ```bash
-gsutil defacl set public-read gs://dj-static-19235
+gsutil defacl set public-read gs://dj-static-19236
+or 
+gsutil defacl set public-read gs://<NAME>
 ```
 upload items to bucket
 ```bash
-gsutil -m rsync -r ./static gs://dj-static-19235/static
+gsutil -m rsync -r ./static gs://dj-static-19236/static
+or
+gsutil -m rsync -r ./static gs://<NAME>
 ```
-cloud storage - still having issues
-create new bucket
+
+
 
 
 
